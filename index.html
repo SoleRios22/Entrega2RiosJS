@@ -32,8 +32,9 @@
           
           </ul>
           <form class="d-flex" role="search">
-            <input class="form-control me-2" type="search" placeholder="Buscar producto..." aria-label="Search"  id="buscador"/>
-            <button class="btn btn-outline-success" onclick="buscarProductos()">Buscar</button>
+            <input type="text" id="buscador" class="form-control" placeholder="Buscar productos..." onkeyup="buscarProductos()">
+
+          
           </form>
         </div>
       
@@ -74,14 +75,30 @@
 
     </main>
 
-    <footer>
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col"></div>
-                <div class="col"></div>
-            </div>
-        </div>
-    </footer>
+   <footer class="bg-light text-dark mt-5 py-4">
+  <div class="container">
+    <div class="row">
+      <!-- Columna 1: Información -->
+      <div class="col-md-6">
+        <h5>Sobre Nosotros</h5>
+        <p>Tienda Saludable es tu lugar de confianza para productos naturales, frescos y orgánicos. Promovemos una vida saludable con alimentos de calidad.</p>
+      </div>
+
+      <!-- Columna 2: Contacto -->
+      <div class="col-md-6">
+        <h5>Contacto</h5>
+        <ul class="list-unstyled">
+          <li>Email: contacto@tiendasaludable.com</li>
+          <li>Teléfono: +54 358 4315332</li>
+          <li>Dirección: Calle Ficticia 123, Córdoba, Argentina</li>
+        </ul>
+      </div>
+    </div>
+    <div class="text-center mt-3">
+      <small>&copy; 2025 Tienda Saludable. Todos los derechos reservados.</small>
+    </div>
+  </div>
+</footer>
 
         <script src="/index.js"></script>
 </body>
