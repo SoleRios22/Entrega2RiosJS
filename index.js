@@ -59,7 +59,7 @@ const favoritos=new Set();
       });
     }
 */
- function mostrarProductos(lista) {
+ function mostrarProductos(lista, esCarrito=false) {
       const contenedor = document.getElementById('lista-productos');
       contenedor.innerHTML = '';
       lista.forEach(p => {
@@ -82,6 +82,8 @@ const favoritos=new Set();
                 </div>
 
                 <p>Cantidad en carrito: ${cantidad}</p>
+                ${esCarrito ? `<button class="btn btn-sm btn-warning" onclick="eliminarDelCarrito('${p.nombre}')">Eliminar del carrito</button>` : ''}
+
                 <button class="btn btn-sm ${esFavorito ? 'btn-danger' : 'btn-outline-danger'}" onclick="toggleFavorito('${p.nombre}')">
                   ${esFavorito ? 'Quitar de favoritos' : '❤️ Favorito'}
                 </button>
@@ -89,8 +91,54 @@ const favoritos=new Set();
             </div>
           </div>`;
       });
+      if (esCarrito) mostrarResumenCarrito();
+      else document.getElementById('resumen-carrito').innerHTML = '';
     }
 
+function mostrarResumenCarrito() {
+      let total = 0;
+      let resumen = '<h4>Resumen del Carrito</h4><ul class="list-group">';
+      for (const nombre in carrito) {
+        const producto = productosDisponibles.find(p => p.nombre === nombre);
+        const cantidad = carrito[nombre];
+        const subtotal = cantidad * producto.precio;
+        total += subtotal;
+        resumen += `<li class="list-group-item d-flex justify-content-between align-items-center">
+                      ${nombre} x ${cantidad}
+                      <span>$${subtotal.toFixed(2)}</span>
+                    </li>`;
+      }
+      resumen += `</ul>
+        <h5 class="mt-3">Total: $${total.toFixed(2)}</h5>
+        <div class="mt-3">
+          <button class="btn btn-success me-2" onclick="finalizarCompra()">Finalizar compra</button>
+          <button class="btn btn-danger" onclick="vaciarCarrito()">Vaciar carrito</button>
+        </div>`;
+      document.getElementById('resumen-carrito').innerHTML = resumen;
+    }
+
+    function finalizarCompra() {
+      let mensaje = "Hola, quiero realizar la siguiente compra:%0A";
+      let total = 0;
+      for (const nombre in carrito) {
+        const producto = productosDisponibles.find(p => p.nombre === nombre);
+        const cantidad = carrito[nombre];
+        const subtotal = cantidad * producto.precio;
+        mensaje += `- ${nombre} x${cantidad} = $${subtotal.toFixed(2)}%0A`;
+        total += subtotal;
+      }
+      mensaje += `%0ATotal: $${total.toFixed(2)}`;
+      const numeroWhatsApp = "543584315332";
+      const url = `https://wa.me/${numeroWhatsApp}?text=${mensaje}`;
+      window.open(url, '_blank');
+    }
+    function vaciarCarrito() {
+      for (const nombre in carrito) {
+        delete carrito[nombre];
+      }
+      actualizarCarrito();
+      verCarrito();
+    }
 
 function filtrarProductos(categoria) {
   productosFiltrados = productosDisponibles.filter(p => p.categoria === categoria);
@@ -127,13 +175,14 @@ function toggleFavorito(nombre) {
 function eliminarDelCarrito(nombre) {
       delete carrito[nombre];
       actualizarCarrito();
+      verCarrito();
     }
 
 
 function actualizarCarrito() {
       const total = Object.values(carrito).reduce((a, b) => a + b, 0);
       document.getElementById('cart-count').innerText = total;
-      mostrarProductos(productosFiltrados);
+    //  mostrarProductos(productosFiltrados);
     }
 
 function verFavoritos() {
@@ -143,7 +192,7 @@ function verFavoritos() {
 
  function verCarrito() {
       const lista = productosDisponibles.filter(p => carrito[p.nombre]);
-      mostrarProductos(lista);
+      mostrarProductos(lista, true);
     }
 
 function generarCategorias() {
